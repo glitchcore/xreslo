@@ -1,42 +1,67 @@
-import base.Terminal;
+import xreslo.base.Terminal.VoltageOut;
+import xreslo.base.Terminal;
+// import components.Diode;
+import xreslo.components.Passive;
+import xreslo.Xreslo.connect;
 
-class LED {
-	public function new() {
-	  
+/*
+class VoltageDrivenLed {
+	var v2c:seriesZ;
+	var led: LED;
+	
+	public function new(current: Float) {
+		
+		Xreslo.connect(v2c, led);
 	}
-	public function setCurrent() {
-	  
+	
+	public function setCurrent(current: Float) {
+		v2c.setCurrent(current);
 	}
+	
 	public function getCurrent() {
 	  
 	}
-	public function connect() {
-		
+	public function connect(src: VoltageTerminal): Bool {
+		v2c. = src.voltage;
 	}
   
 }
-class Button {
+*/
 
-}
-class Blinker {
-	var led:VoltageDrivenLed;
-	var button:Button;
-	var battery:VoltageTerminal;
+class Button {
+	var state: Bool;
+	
+	public var a: Terminal;
+	public var b: Terminal;
 	
 	public function new() {
-		led = new VoltageDrivenLed(0.14); // nominal current of led
+		state = false;
+	}
+	
+	public function set(state: Bool) {
+		this.state = state;
+	}
+}
+
+class Blinker {
+	var load:Resistor;
+	var button:Button;
+	var battery:VoltageOut;
+	
+	public function new() {
+		load = new Resistor(910); // nominal in Ohm
 		button = new Button();
-		battery = new VoltageTerminal(3.0, 1.2); // voltage, maxCurrent
+		battery = new VoltageOut(3.0, 1.2); // voltage, maxCurrent
 		
-		connect(led, button);
-		connect(battery, button);
+		connect(load, button.a);
+		connect(battery, button.b);
 		
 		button.set(true);
 		
-		trace("battery current = $1", battery.getCurrent());
+		trace('battery current = ${battery.getCurrent()}');
 		
 		button.set(false);
 		
-		trace("battery current = $1", battery.getCurrent());
+		trace('battery current = ${battery.getCurrent()}');
 	}
 }

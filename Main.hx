@@ -1,7 +1,7 @@
+import Blinker;
 
 class Main {
 	static function main() {
-		//blinker = new Blinker();
-		trace("battery current = " + 20);
+		var blinker = new Blinker();
 	}
 }
