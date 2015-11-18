@@ -10,7 +10,7 @@ class Resistor extends Terminal {
 		this.resistance = resistance;
 	}
 	
-	public function getCurrent(): Float {
+	override public function getCurrent(): Float {
 		if(connected) {
 			return link.getVoltage() / resistance;
 		}
@@ -18,7 +18,7 @@ class Resistor extends Terminal {
 		return null;
 	}
 	
-	public function getVoltage(): Float {
+	override public function getVoltage(): Float {
 		if(connected) {
 			return link.getCurrent() * resistance;
 		}

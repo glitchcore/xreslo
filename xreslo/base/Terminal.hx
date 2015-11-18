@@ -38,7 +38,15 @@ class Terminal implements Connectable {
 		return true; // TODO check types
 	}
 	
+	public function getCurrent():Float {
+		trace("unimplemented get current");
+		return null;
+	}
 	
+	public function getVoltage():Float {
+		trace("unimplemented get voltage");
+		return null;
+	}
 }
 
 class VoltageOut extends Terminal  {
@@ -56,8 +64,16 @@ class VoltageOut extends Terminal  {
 	public function setVoltage(terminal:Terminal) {
 		// VerilogAMS('V(${a.guid},$1) <+ V($2,$3)', b.a.GUID, terminal.a.GUID, terminal.b.GUID);
 	}
-	public function getCurrent():Float {
-		return link.getCurrent();
+	override public function getCurrent():Float {
+		if(connected) {
+			return link.getCurrent();
+		} else {
+			trace("unconnected voltageOut");
+			return null;
+		}
+	}
+	override public function getVoltage():Float {
+		return voltage;
 	}
 }
 

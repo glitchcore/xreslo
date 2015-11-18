@@ -53,8 +53,9 @@ class Blinker {
 		button = new Button();
 		battery = new VoltageOut(3.0, 1.2); // voltage, maxCurrent
 		
-		connect(load, button.a);
-		connect(battery, button.b);
+		// connect(load, button.a);
+		// connect(battery, button.b);
+		connect(battery, load); // direct connect
 		
 		button.set(true);
 		
