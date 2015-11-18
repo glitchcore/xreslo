@@ -51,16 +51,14 @@ class Button {
 		if(self.connected) {
 			return self.link.getCurrent();
 		} else {
-			trace("unconnected button");
-			return null;
+			throw "unconnected button";
 		}
 	}
 	function _getVoltage(self: Terminal):Float {
 		if(self.connected) {
 			return self.link.getVoltage();
 		} else {
-			trace("unconnected button");
-			return null;
+			throw "unconnected button";
 		}
 	}
 	
@@ -72,7 +70,7 @@ class Button {
 class Blinker {
 
 	public function new() {
-		var load = new Resistor(910); // nominal in Ohm
+		var load = new Resistor(200); // nominal in Ohm
 		var button = new Button();
 		var battery = new VoltageOut(3.0, 1.2); // voltage, maxCurrent
 		

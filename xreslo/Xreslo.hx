@@ -6,10 +6,10 @@ class Xreslo {
 	public static function connect(a: Connectable, b: Connectable): Bool {
 		// call both connect method
 		if(!a.connect(b)) {
-			return false;
+			throw "cannot connect b to a";
 		}
 		if(!b.connect(a)) {
-			return false;
+			throw "cannot connect a to b";
 		}
 		return true;
 	}

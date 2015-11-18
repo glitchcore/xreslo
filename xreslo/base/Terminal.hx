@@ -84,11 +84,11 @@ class VoltageOut extends Terminal  {
 			if(link.getCurrent() < maxCurrent) {
 				return link.getCurrent();
 			} else {
-				trace('current ${link.getCurrent()} A overload (max ${maxCurrent} A)');
+				throw 'current ${link.getCurrent()} A overload (max ${maxCurrent} A)';
 				return maxCurrent;
 			}
 		} else {
-			trace("unconnected voltageOut");
+			throw "unconnected voltageOut";
 			return null;
 		}
 	}
@@ -130,12 +130,10 @@ class CurrentOut extends Terminal {
 			if(link.getVoltage() < maxVoltage) {
 				return link.getVoltage();
 			} else {
-				trace('voltage ${link.getVoltage()} V overload (max ${maxVoltage} V)');
-				return maxVoltage;
+				throw 'voltage ${link.getVoltage()} V overload (max ${maxVoltage} V)';
 			}
 		} else {
-			trace("unconnected currentOut");
-			return null;
+			throw "unconnected currentOut";
 		}
 	}
 }

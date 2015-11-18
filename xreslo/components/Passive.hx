@@ -14,7 +14,7 @@ class Resistor extends Terminal {
 		if(connected) {
 			return link.getVoltage() / resistance;
 		}
-		trace("Resistor unconnected");
+		throw "Resistor unconnected";
 		return null;
 	}
 	
@@ -22,7 +22,7 @@ class Resistor extends Terminal {
 		if(connected) {
 			return link.getCurrent() * resistance;
 		}
-		trace("Resistor unconnected");
+		throw "Resistor unconnected";
 		return null;
 	}
 }

@@ -2,6 +2,8 @@ import Blinker;
 
 class Main {
 	static function main() {
-		var blinker = new Blinker();
+		try
+		var blinker = new Blinker()
+		catch(error:String) trace('error: ${error}');
 	}
 }
