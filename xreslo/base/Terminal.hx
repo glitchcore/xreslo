@@ -21,13 +21,20 @@ class Terminal implements Connectable {
 	public var a(default, null): Node;
 	public var b(default, null): Node;
 	
-	var connected: Bool;
-	var link: Connectable;
+	public var connected: Bool;
+	public var link(default,null): Connectable;
 	
-	public function new() {
+	var getCurrentFunction: Void->Float;
+	var getVoltageFunction: Void->Float;
+	
+	public function new(getVoltageFunction: Void->Float, getCurrentFunction: Void->Float) {
 		connected = false;
 		a = new Node();
 		b = new Node();
+		
+		this.getCurrentFunction = getCurrentFunction;
+		this.getVoltageFunction = getVoltageFunction;
+		
 		Xreslo.VerilogAMS('inout ${a.guid}, ${b.guid};');
 		Xreslo.VerilogAMS('electrical ${a.guid}, ${b.guid};');
 	}
@@ -39,13 +46,21 @@ class Terminal implements Connectable {
 	}
 	
 	public function getCurrent():Float {
-		trace("unimplemented get current");
-		return null;
+		if(getCurrentFunction == null) {
+			trace("unimplemented get current");
+			return null;
+		} else {
+			return getCurrentFunction();
+		}
 	}
 	
 	public function getVoltage():Float {
-		trace("unimplemented get voltage");
-		return null;
+		if(getVoltageFunction == null) {
+			trace("unimplemented get voltage");
+			return null;
+		} else {
+			return getVoltageFunction();
+		}
 	}
 }
 
@@ -55,7 +70,7 @@ class VoltageOut extends Terminal  {
 	var voltage: Float;
 	
 	public function new(voltage:Float, maxCurrent: Float) {
-		super();
+		super(_getVoltage, _getCurrent);
 		this.voltage = voltage;
 		this.maxCurrent = maxCurrent;
 		// maxCurrent = voltage / impedance;
@@ -64,15 +79,20 @@ class VoltageOut extends Terminal  {
 	public function setVoltage(terminal:Terminal) {
 		// VerilogAMS('V(${a.guid},$1) <+ V($2,$3)', b.a.GUID, terminal.a.GUID, terminal.b.GUID);
 	}
-	override public function getCurrent():Float {
+	function _getCurrent():Float {
 		if(connected) {
-			return link.getCurrent();
+			if(link.getCurrent() < maxCurrent) {
+				return link.getCurrent();
+			} else {
+				trace('current ${link.getCurrent()} A overload (max ${maxCurrent} A)');
+				return link.getCurrent();
+			}
 		} else {
 			trace("unconnected voltageOut");
 			return null;
 		}
 	}
-	override public function getVoltage():Float {
+	function _getVoltage():Float {
 		return voltage;
 	}
 }

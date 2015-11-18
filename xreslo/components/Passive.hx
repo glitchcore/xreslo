@@ -6,11 +6,11 @@ class Resistor extends Terminal {
 	var resistance: Float;
 	
 	public function new(resistance: Float){
-		super();
+		super(_getVoltage, _getCurrent);
 		this.resistance = resistance;
 	}
 	
-	override public function getCurrent(): Float {
+	function _getCurrent(): Float {
 		if(connected) {
 			return link.getVoltage() / resistance;
 		}
@@ -18,7 +18,7 @@ class Resistor extends Terminal {
 		return null;
 	}
 	
-	override public function getVoltage(): Float {
+	function _getVoltage(): Float {
 		if(connected) {
 			return link.getCurrent() * resistance;
 		}

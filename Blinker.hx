@@ -35,7 +35,33 @@ class Button {
 	public var b: Terminal;
 	
 	public function new() {
+		a = new Terminal(
+			function() { if(state) return _getVoltage(b); else return 0; },
+			function() { if(state) return _getCurrent(b); else return 0; }
+		);
+		b = new Terminal(
+			function() { if(state) return _getVoltage(a); else return 0; },
+			function() { if(state) return _getCurrent(a); else return 0; }
+		);
 		state = false;
+	}
+	
+	
+	function _getCurrent(self: Terminal):Float {
+		if(self.connected) {
+			return self.link.getCurrent();
+		} else {
+			trace("unconnected button");
+			return null;
+		}
+	}
+	function _getVoltage(self: Terminal):Float {
+		if(self.connected) {
+			return self.link.getVoltage();
+		} else {
+			trace("unconnected button");
+			return null;
+		}
 	}
 	
 	public function set(state: Bool) {
@@ -49,13 +75,13 @@ class Blinker {
 	var battery:VoltageOut;
 	
 	public function new() {
-		load = new Resistor(910); // nominal in Ohm
+		load = new Resistor(1); // nominal in Ohm
 		button = new Button();
 		battery = new VoltageOut(3.0, 1.2); // voltage, maxCurrent
 		
-		// connect(load, button.a);
-		// connect(battery, button.b);
-		connect(battery, load); // direct connect
+		connect(load, button.a);
+		connect(battery, button.b);
+		// connect(battery, load); // direct connect
 		
 		button.set(true);
 		
