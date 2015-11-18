@@ -85,7 +85,7 @@ class VoltageOut extends Terminal  {
 				return link.getCurrent();
 			} else {
 				trace('current ${link.getCurrent()} A overload (max ${maxCurrent} A)');
-				return link.getCurrent();
+				return maxCurrent;
 			}
 		} else {
 			trace("unconnected voltageOut");
@@ -97,16 +97,19 @@ class VoltageOut extends Terminal  {
 	}
 }
 
-/*
+
 class CurrentOut extends Terminal {
 	var maxVoltage: Float;
 	var admittance: Float;
 	var useAdmittance: Bool;
+	var current: Float;
 	
-	public function new() {
-		super();
-		maxVoltage = current * admittance;
-		useAdmittance = true;
+	public function new(current: Float, maxVoltage: Float) {
+		super(_getVoltage, _getCurrent);
+		this.maxVoltage = maxVoltage;
+		this.current = current;
+		
+		useAdmittance = false;
 	}
 	
 	public function setAdmittance(y:Float) {
@@ -115,16 +118,24 @@ class CurrentOut extends Terminal {
 	}
 	
 	public function setMaxVoltage(v:Float) {
-		maxVoltage = y;
+		maxVoltage = v;
 		useAdmittance = false;
 	}
 	
-	
-	public function setCurrent(v:Float) {
-		VerilogAMS('I($1,$2) <+ $3', , a.GUID, b.a.GUID);
+	function _getCurrent():Float {
+		return current;
 	}
-	public function setCurrent(terminal:Terminal) {
-		VerilogAMS('I($1,$2) <+ I($3,$4)', a.GUID, b.a.GUID, terminal.a.GUID, terminal.b.GUID);
+	function _getVoltage():Float {
+		if(connected) {
+			if(link.getVoltage() < maxVoltage) {
+				return link.getVoltage();
+			} else {
+				trace('voltage ${link.getVoltage()} V overload (max ${maxVoltage} V)');
+				return maxVoltage;
+			}
+		} else {
+			trace("unconnected currentOut");
+			return null;
+		}
 	}
 }
-*/

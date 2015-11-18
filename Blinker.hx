@@ -70,14 +70,16 @@ class Button {
 }
 
 class Blinker {
-	var load:Resistor;
-	var button:Button;
-	var battery:VoltageOut;
-	
+
 	public function new() {
-		load = new Resistor(1); // nominal in Ohm
-		button = new Button();
-		battery = new VoltageOut(3.0, 1.2); // voltage, maxCurrent
+		var load = new Resistor(910); // nominal in Ohm
+		var button = new Button();
+		var battery = new VoltageOut(3.0, 1.2); // voltage, maxCurrent
+		
+		var LVDSload = new Resistor(50); // nominal in Ohm
+		var LVDSsource = new CurrentOut(0.01, 5);
+		
+		connect(LVDSload, LVDSsource);
 		
 		connect(load, button.a);
 		connect(battery, button.b);
@@ -90,5 +92,8 @@ class Blinker {
 		button.set(false);
 		
 		trace('battery current = ${battery.getCurrent()}');
+		
+		trace('LVDS load voltage = ${LVDSload.getVoltage()}');
+		
 	}
 }
